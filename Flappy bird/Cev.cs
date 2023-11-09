@@ -10,13 +10,15 @@ namespace Flappy_bird
 	{
 		private int X;
 		private int sirinaCevi;
-		private PictureBox GornjaCev = new PictureBox();
-		private PictureBox DonjaCev = new PictureBox();
+		public PictureBox GornjaCev { get; set; }
+		public PictureBox DonjaCev { get; set; }
 		private int y;
 		private Form form;
 
 		public Cev( Form form )
 		{
+			GornjaCev = new PictureBox();
+			DonjaCev = new PictureBox();
 			this.form = form;
 			GornjaCev.TabStop = false;
 			DonjaCev.TabStop = false;
@@ -26,7 +28,7 @@ namespace Flappy_bird
 			DonjaCev.BackColor = Color.Transparent;
 			DonjaCev.SizeMode = PictureBoxSizeMode.StretchImage;
 			GornjaCev.SizeMode = PictureBoxSizeMode.StretchImage;
-
+			
 			form.Controls.Add( GornjaCev );
 			form.Controls.Add( DonjaCev );
 		}
@@ -38,7 +40,7 @@ namespace Flappy_bird
 			int visinaForm = form.ClientSize.Height;
 			var duzinaCevi = visinaForm;
 
-			int razmakIzmedjuGornjeIDonje = visinaForm/4;
+			int razmakIzmedjuGornjeIDonje = visinaForm/3;
 			var random = new Random();
 
 			var cevYdole = random.Next(visinaForm/10+razmakIzmedjuGornjeIDonje, 
@@ -48,6 +50,7 @@ namespace Flappy_bird
 
 			DonjaCev.SetBounds(cevX, cevYdole, sirinaCevi, duzinaCevi);
 			GornjaCev.SetBounds(cevX, cevYgore, sirinaCevi, duzinaCevi);
+
 		}
 
 		public void PomeriCevLevo( int delta )

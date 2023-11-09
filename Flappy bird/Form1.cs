@@ -17,11 +17,23 @@ namespace Flappy_bird
 		public static int razmak;
 		public static List<Cev> Cevi = new List<Cev>();
 
+		int indexPrveCevi;
+		int indexCeviIspredPtice;
+		int ideGore;
+		int ubrzavanje;
+		int Highscore;
+		bool gameOver;
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			ideGore = 0;
+			ubrzavanje = 0;
+			gameOver = false;
+
 			var x = Width;
 			var sirinaCevi = Width/8;
 			razmak = (Width - 3*sirinaCevi)/3;
+			pticaX = Width / 8;
+			pticaY = Height / 2;
 			PostaviPticu();
 			for ( int i = 0; i < 4; i++ )
 			{
@@ -31,37 +43,69 @@ namespace Flappy_bird
 
 				x += razmak+sirinaCevi;
 			}
+			indexPrveCevi = 0;
+			indexCeviIspredPtice = 0;
 
 			timer1.Start();
 		}
-
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			foreach ( var cev in Cevi )
+            //Score i provera udarca
+            if (pbxPtica.Right >= Cevi[indexCeviIspredPtice].GornjaCev.Left && pbxPtica.Left <= Cevi[indexCeviIspredPtice].GornjaCev.Right)
+            {
+				if (pbxPtica.Top+5 <= Cevi[indexCeviIspredPtice].GornjaCev.Bottom ||
+					pbxPtica.Bottom-5 >= Cevi[indexCeviIspredPtice].DonjaCev.Top)
+				{
+					gameOver = true;
+				}
+            }
+			else if (pbxPtica.Left > Cevi[indexCeviIspredPtice].GornjaCev.Right)
+            {
+				indexCeviIspredPtice++;
+
+				if (indexCeviIspredPtice == Cevi.Count) indexCeviIspredPtice = 0;
+            }
+			//pomeranje cevi
+			if(!gameOver)PomeranjeCevi();
+			//kretanje ptice
+			if (ideGore > 0 && !gameOver)
+			{
+				ubrzavanje = 0;
+				pbxPtica.Top -= ideGore;//koristim trajanje koliko dugo treba da ide gore da bi postigao blago usporavanje
+				ideGore--;
+			}
+			else if(pbxPtica.Top <= ClientSize.Height)
+            {
+				pbxPtica.Top+=ubrzavanje;
+				if(ubrzavanje !=5)ubrzavanje++;//blago ubrzavanje
+            }
+			else gameOver = true;
+
+		}
+
+		private void PomeranjeCevi()
+        {
+			foreach (var cev in Cevi)
 			{
 				cev.PomeriCevLevo(5);
 			}
-			if ( Cevi[0].DaLiJeIzaslo(razmak) )
+			if (Cevi[indexPrveCevi].DaLiJeIzaslo(razmak))
 			{
-				var prva = Cevi[0];
+				var prva = Cevi[indexPrveCevi];
 				prva.PomeriSkrozDesno();
-				Cevi.RemoveAt(0);
-				Cevi.Add(prva);
+				indexPrveCevi++;
+				if (indexPrveCevi == Cevi.Count)
+				{
+					indexPrveCevi = 0;
+				}
 			}
-
-			Refresh();
 		}
-
 		private void PostaviPticu()
 		{
-			int visinaForm = Height;
-			int sirinaForm = Width;
 			//pocetna pozicija i velicina ptice
-			int sirinaPtice = sirinaForm/12;
+			int sirinaPtice = Width /12;
 			int duzinaPtice = sirinaPtice - sirinaPtice/10;
-			pticaX = sirinaForm/8;
-			pticaY = visinaForm/2 - duzinaPtice;
-			pbxPtica.SetBounds(pticaX, pticaY, sirinaPtice, duzinaPtice);
+			pbxPtica.SetBounds(pticaX, pticaY-duzinaPtice, sirinaPtice, duzinaPtice);
 		}
 
 		private void pictureBox1_Click(object sender, EventArgs e)
@@ -69,6 +113,12 @@ namespace Flappy_bird
 
 		}
 
-
-	}
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+			if (e.KeyCode == Keys.Space)
+            {
+				ideGore = 10;//koliko dugo ce ici ka gore nakon pritiska spejsa
+            }
+        }
+    }
 }
