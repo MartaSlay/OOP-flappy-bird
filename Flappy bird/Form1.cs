@@ -42,20 +42,26 @@ namespace Flappy_bird
 			int xPtice = sirinaForm/10;
 			int yPtice = visinaForm/2 - duzinaPtice;
 			pbxPtica.SetBounds(xPtice, yPtice, sirinaPtice, duzinaPtice);
-			//pbxPtica.Size = new System.Drawing.Size(duzinaPtice,sirinaPtice);
+			pbxPtica.Size = new System.Drawing.Size(duzinaPtice,sirinaPtice);
 		}
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if ( )
+            /*if ( )
 			{
 				autoX = autoX + 3;
-			}
+			}*/
 		}
 		private void pictureBox1_Click(object sender, EventArgs e)
 		{
 
 		}
-
-		
-	}
+		public int ideGore = 0;
+		private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+				ideGore = 10;
+            }
+        }
+    }
 }
