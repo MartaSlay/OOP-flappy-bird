@@ -15,15 +15,17 @@ namespace Flappy_bird
 		public static int razmak;
 		public static List<Cev> Cevi = new List<Cev>();
 		Label brojacPoena,maxPoena,krajIgre;
+		int brojacPoenaVisina = 55;
+		int brojacPoenaSirina = 60;
 
-		int brzinaPtice = 6;
-		int jacinaSkoka = 1;
+		int brzinaPtice = 8;
+		double jacinaSkoka = 1.5;
 
-		int brzinaCevi = 3;
+		int brzinaCevi = 5;
 
 		int indexPrveCevi;
 		int indexCeviIspredPtice;
-		int ideGore;
+		double ideGore;
 		int ubrzavanje;
 		int highScore;
 		int score;
@@ -31,16 +33,14 @@ namespace Flappy_bird
 		private void Form1_Load(object sender, EventArgs e)
 		{
 
-			this.Width = 900;
-			this.Height = 500;
+			this.Width = 1200;
+			this.Height = 800;
 
 			brojacPoena = new Label();
 			brojacPoena.BackColor = Color.White;
 			brojacPoena.ForeColor = Color.Black;
 			brojacPoena.BorderStyle = BorderStyle.Fixed3D;
-			brojacPoena.Text = "0";
-			brojacPoena.Font = new Font("Arial",30,FontStyle.Bold);
-			brojacPoena.SetBounds(Width/2-20,Height/10,40,45);
+			brojacPoena.Font = new Font("Arial",25,FontStyle.Bold);
 			Controls.Add(brojacPoena);
 
 			krajIgre = new Label();
@@ -48,16 +48,18 @@ namespace Flappy_bird
 			krajIgre.ForeColor = Color.Black;
 			krajIgre.BorderStyle = BorderStyle.FixedSingle;
 			krajIgre.Text = "KRAJ IGRE";
-			krajIgre.Font = new Font("Gill Sans Ultra Bold", 50, FontStyle.Bold);
-			krajIgre.SetBounds(Width / 2-250, Height / 3, 500, 90);
+			krajIgre.Font = new Font("Copperplate Gothic Bold", 50, FontStyle.Bold);
+			krajIgre.SetBounds(Width / 2- 250, Height / 3, 500, 100);
+			krajIgre.TextAlign = ContentAlignment.MiddleCenter;
 			Controls.Add(krajIgre);
 
 			maxPoena = new Label();
 			maxPoena.BackColor = Color.White;
 			maxPoena.ForeColor = Color.Black;
-			maxPoena.BorderStyle = BorderStyle.Fixed3D;
-			maxPoena.Font = new Font("Arial", 30, FontStyle.Bold);
-			maxPoena.SetBounds(Width / 2 - 100, Height / 3+100, 200, 45);
+			maxPoena.BorderStyle = BorderStyle.FixedSingle;
+			maxPoena.Font = new Font("Copperplate Gothic Bold", 25, FontStyle.Bold);
+			maxPoena.SetBounds(Width / 2 - 200, Height / 3+110, 350, 60);
+			maxPoena.TextAlign = ContentAlignment.MiddleCenter;
 			Controls.Add(maxPoena);
 
 			PocetnaPozicija();
@@ -72,7 +74,7 @@ namespace Flappy_bird
 			score = 0;
 
 			brojacPoena.Text = "0";
-			brojacPoena.SetBounds(Width / 2 - 20, Height / 10, 40, 45);
+			brojacPoena.SetBounds(Width/2-20, Height/10, 50, 60);
 
 			var x = Width;
 			var sirinaCevi = Width / 8;
@@ -110,12 +112,16 @@ namespace Flappy_bird
 				}
 				else if (pbxPtica.Left > Cevi[indexCeviIspredPtice].GornjaCev.Right)
 				{
+					int prethodnaSirinaBrojaca = 23 *(score.ToString().Length - 1);
 					indexCeviIspredPtice++;
 					score++;
 					if (score > highScore) highScore = score;
 					brojacPoena.Text = score.ToString();
-					int sirinaBrojaca = 40 + (30 * (brojacPoena.Text.Length-1));
-					brojacPoena.SetBounds(Width / 2 - sirinaBrojaca/2, Height / 10, sirinaBrojaca, 45);
+					int sirinaBrojaca =  23 * (brojacPoena.Text.Length-1);
+					if (prethodnaSirinaBrojaca < sirinaBrojaca)
+					{
+						brojacPoena.SetBounds(Width / 2 - sirinaBrojaca/2, Height / 10, brojacPoenaSirina + sirinaBrojaca, brojacPoenaVisina);
+					}
 					if (indexCeviIspredPtice == Cevi.Count) indexCeviIspredPtice = 0;
 				}
 				PomeranjeCevi();
@@ -125,7 +131,7 @@ namespace Flappy_bird
             {
 				krajIgre.Visible = true;
 				maxPoena.Text = $"Rekord: {highScore}";
-				maxPoena.Width = 200 + brojacPoena.Width;
+				maxPoena.Width = 350 + brojacPoena.Width;
 				maxPoena.Visible = true;
                 if (pbxPtica.Top <= ClientSize.Height)
                 {
@@ -139,7 +145,7 @@ namespace Flappy_bird
 			if (ideGore > 0)
 			{
 				ubrzavanje = 0;
-				pbxPtica.Top -= ideGore;//koristim trajanje koliko dugo treba da ide gore da bi postigao blago usporavanje
+				pbxPtica.Top -= Convert.ToInt32(ideGore);//koristim trajanje koliko dugo treba da ide gore da bi postigao blago usporavanje
 				ideGore--;
 			}
 			else if (pbxPtica.Top <= ClientSize.Height)
@@ -181,7 +187,8 @@ namespace Flappy_bird
 			if (e.KeyCode == Keys.Space && !gameOver)
             {
 				ideGore = brzinaPtice*jacinaSkoka;//koliko dugo ce ici ka gore nakon pritiska spejsa
-            }else if (e.KeyCode == Keys.Space)
+            }
+			else if (e.KeyCode == Keys.Space)
             {
 				PocetnaPozicija();
             }

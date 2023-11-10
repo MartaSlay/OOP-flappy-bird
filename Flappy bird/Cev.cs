@@ -12,7 +12,6 @@ namespace Flappy_bird
 		private int sirinaCevi;
 		public PictureBox GornjaCev { get; set; }
 		public PictureBox DonjaCev { get; set; }
-		private int y;
 		private Form form;
 
 		public Cev( Form form )
