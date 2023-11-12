@@ -75,10 +75,10 @@ namespace Flappy_bird
 			ideGore = 0;
 			ubrzavanje = 0;
 			gameOver = false;
-			score = 98;
+			score = 0;
 
 			lblBrojacPoena.Text = "0";
-			lblBrojacPoena.SetBounds(Width/2-20, Height/10, Height/16, Height/14);
+			lblBrojacPoena.SetBounds(Width/2, Height/10, Height/16, Height/14);
 			lblBrojacPoena.TextAlign = ContentAlignment.MiddleCenter;
 
 			var x = Width;
@@ -110,8 +110,8 @@ namespace Flappy_bird
 				//Score i provera udarca
 				if (pbxPtica.Right >= Cevi[indexCeviIspredPtice].GornjaCev.Left && pbxPtica.Left <= Cevi[indexCeviIspredPtice].GornjaCev.Right)
 				{
-					if (pbxPtica.Top + 5 <= Cevi[indexCeviIspredPtice].GornjaCev.Bottom ||
-						pbxPtica.Bottom - 5 >= Cevi[indexCeviIspredPtice].DonjaCev.Top)
+					if (pbxPtica.Top <= Cevi[indexCeviIspredPtice].GornjaCev.Bottom ||
+						pbxPtica.Bottom >= Cevi[indexCeviIspredPtice].DonjaCev.Top)
 					{
 						gameOver = true;
 					}
