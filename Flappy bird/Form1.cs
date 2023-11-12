@@ -13,8 +13,8 @@ namespace Flappy_bird
 			InitializeComponent();
 			pocetnaPozPtice = new Bitmap(pbxPtica.BackgroundImage);
 		}
-		public static int razmak;
-		public static List<Cev> Cevi = new List<Cev>();
+		int razmak;
+		List<Cev> Cevi = new List<Cev>();
 
 		Label lblBrojacPoena=new Label(),lblMaxPoena=new Label(),lblKrajIgre = new Label();
 		Bitmap pocetnaPozPtice;
@@ -80,7 +80,7 @@ namespace Flappy_bird
 			ideGore = 0;
 			brzinaKaDole = 0;
 			gameOver = false;
-			score = 98;
+			score = 0;
 
 			lblBrojacPoena.Text = "0";
 			lblBrojacPoena.SetBounds(Width/2-20, Height/10, Height/16, Height/14);
@@ -115,8 +115,8 @@ namespace Flappy_bird
 				//Score i provera udarca
 				if (pbxPtica.Right >= Cevi[indexCeviIspredPtice].GornjaCev.Left && pbxPtica.Left <= Cevi[indexCeviIspredPtice].GornjaCev.Right)
 				{
-					if (pbxPtica.Top + 5 <= Cevi[indexCeviIspredPtice].GornjaCev.Bottom ||
-						pbxPtica.Bottom - 5 >= Cevi[indexCeviIspredPtice].DonjaCev.Top)
+					if (pbxPtica.Top <= Cevi[indexCeviIspredPtice].GornjaCev.Bottom ||
+						pbxPtica.Bottom >= Cevi[indexCeviIspredPtice].DonjaCev.Top)
 					{
 						gameOver = true;
 					}
@@ -126,7 +126,6 @@ namespace Flappy_bird
 					int prethodnaSirinaBrojaca = 25 *(score.ToString().Length - 1);
 					indexCeviIspredPtice++;
 					score++;
-					if (score > highScore) highScore = score;
 					lblBrojacPoena.Text = score.ToString();
 					int sirinaBrojaca =  25 * (lblBrojacPoena.Text.Length-1);
 					if (prethodnaSirinaBrojaca < sirinaBrojaca)
@@ -148,6 +147,7 @@ namespace Flappy_bird
             else
             {
 				lblKrajIgre.Visible = true;
+				if (score > highScore) highScore = score;
 				lblMaxPoena.Text = $"Rekord: {highScore}";
 				lblMaxPoena.Visible = true;
                 if (pbxPtica.Top <= ClientSize.Height)
@@ -173,7 +173,7 @@ namespace Flappy_bird
 					rotirajKaZemlji = true;
 				}
 				if(ideGore <= 0)//kada krene da pada okrene se ka napred
-					pbxPtica.BackgroundImage = new Bitmap(pocetnaPozPtice);
+					pbxPtica.BackgroundImage = pocetnaPozPtice;
 			}
 			else if (pbxPtica.Top <= ClientSize.Height - pbxZemlja.Height)
 			{
