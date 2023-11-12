@@ -15,6 +15,7 @@ namespace Flappy_bird
 		}
 		public static int razmak;
 		public static List<Cev> Cevi = new List<Cev>();
+
 		Label lblBrojacPoena=new Label(),lblMaxPoena=new Label(),lblKrajIgre = new Label();
 		Bitmap pocetnaPozPtice;
 		Bitmap pticaPoz45 = new Bitmap(Properties.Resources.pbxPtica_BackgroundImage45);
@@ -26,8 +27,8 @@ namespace Flappy_bird
 
 		int indexPrveCevi;
 		int indexCeviIspredPtice;
-		int ideGore;
-		int ubrzavanje;
+		int ideGore;//koliko dugo ptica treba da ide ka gore
+		int brzinaKaDole;
 		int highScore;
 		int score;
 		bool gameOver;
@@ -43,6 +44,7 @@ namespace Flappy_bird
 			lblBrojacPoena.BorderStyle = BorderStyle.Fixed3D;
 			lblBrojacPoena.Font = new Font("Arial",25,FontStyle.Bold);
 			Controls.Add(lblBrojacPoena);
+
 			//namestanje labele za kraj igre
 			lblKrajIgre.BackColor = Color.White;
 			lblKrajIgre.ForeColor = Color.Black;
@@ -52,19 +54,22 @@ namespace Flappy_bird
 			lblKrajIgre.SetBounds(Width / 2- 250, Height / 3, 500, 100);
 			lblKrajIgre.TextAlign = ContentAlignment.MiddleCenter;
 			Controls.Add(lblKrajIgre);
+
 			//namestanje labele za ispis najveceg ostvarenog broja poena
 			lblMaxPoena.BackColor = Color.White;
 			lblMaxPoena.ForeColor = Color.Black;
 			lblMaxPoena.BorderStyle = BorderStyle.FixedSingle;
 			lblMaxPoena.Font = new Font("Copperplate Gothic Bold", 25, FontStyle.Bold);
-			lblMaxPoena.SetBounds(Width / 2 - 175, Height / 3+110, 350, 60);
+			lblMaxPoena.SetBounds(Width / 2 - 200, Height / 3+110, 350, 60);
 			lblMaxPoena.TextAlign = ContentAlignment.MiddleCenter;
 			Controls.Add(lblMaxPoena);
+
 			//namestanje pbx
 			pbxZemlja.BackgroundImage = Properties.Resources.ground;
 			pbxZemlja.BackgroundImageLayout = ImageLayout.Tile;
 			pbxZemlja.SetBounds(0, 700, Width * 2, 100);
 			Controls.Add(pbxZemlja);
+
 			PocetnaPozicija();
 		}
 		private void PocetnaPozicija()
@@ -73,7 +78,7 @@ namespace Flappy_bird
 			lblKrajIgre.Visible = false;
 			igraPocela = false;
 			ideGore = 0;
-			ubrzavanje = 0;
+			brzinaKaDole = 0;
 			gameOver = false;
 			score = 0;
 
@@ -147,8 +152,8 @@ namespace Flappy_bird
 				lblMaxPoena.Visible = true;
                 if (pbxPtica.Top <= ClientSize.Height)
                 {
-					pbxPtica.Top += ubrzavanje;
-					if (ubrzavanje != brzinaPtice) ubrzavanje++;
+					pbxPtica.Top += brzinaKaDole;
+					if (brzinaKaDole != brzinaPtice) brzinaKaDole++;
 				}
             }
 		}
@@ -157,7 +162,7 @@ namespace Flappy_bird
         {
 			if (ideGore > 0)
 			{
-				ubrzavanje = 0;
+				brzinaKaDole = 0;
 				pbxPtica.Top -= ideGore;//koristim trajanje koliko dugo treba da ide gore da bi postigao blago usporavanje
 				ideGore-=2;
                 if (!rotirajKaZemlji)//kad se prvi put pritisne gore treba da se okrene ka gore
@@ -170,10 +175,10 @@ namespace Flappy_bird
 				if(ideGore <= 0)//kada krene da pada okrene se ka napred
 					pbxPtica.BackgroundImage = new Bitmap(pocetnaPozPtice);
 			}
-			else if (pbxPtica.Top <= ClientSize.Height)
+			else if (pbxPtica.Top <= ClientSize.Height - pbxZemlja.Height)
 			{
-				pbxPtica.Top += ubrzavanje;
-				if (ubrzavanje < brzinaPtice) ubrzavanje+=2;//blago ubrzavanje
+				pbxPtica.Top += brzinaKaDole;
+				if (brzinaKaDole < brzinaPtice) brzinaKaDole+=2;//blago brzinaKaDole
                 else if (rotirajKaZemlji)//okrene se ka dole tek kada dodje do maksimalne brzine
                 {
 					pbxPtica.BackgroundImage = new Bitmap(pticaPoz45);
@@ -185,18 +190,18 @@ namespace Flappy_bird
 		private void PasivnoPomeranjePtice()
         {
 
-			if(ubrzavanje > 0)
+			if(brzinaKaDole > 0)
             {
 				ideGore = brzinaPtice;
 				pbxPtica.Top += 1;
-				ubrzavanje -= 1;
+				brzinaKaDole -= 1;
             }
             else if(ideGore > 0)
             {
 				pbxPtica.Top -= 1;
 				ideGore -= 1;
 			}
-			else ubrzavanje = brzinaPtice;
+			else brzinaKaDole = brzinaPtice;
         }
 		private void PomeranjeCevi()
         {
