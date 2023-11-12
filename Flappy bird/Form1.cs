@@ -22,7 +22,7 @@ namespace Flappy_bird
 		PictureBox pbxZemlja = new PictureBox();
 
 		int brzinaPtice = 20;
-		int jacinaSkoka = 20;
+		int jacinaSkoka = 15;
 		int brzinaCevi = 12;
 
 		int indexPrveCevi;
@@ -35,14 +35,14 @@ namespace Flappy_bird
 		bool igraPocela;
 		private void Form1_Load(object sender, EventArgs e)
 		{
-
 			this.Width = 1200;
 			this.Height = 800;
+
 			//namestanje labele za brojac
 			lblBrojacPoena.BackColor = Color.White;
 			lblBrojacPoena.ForeColor = Color.Black;
 			lblBrojacPoena.BorderStyle = BorderStyle.Fixed3D;
-			lblBrojacPoena.Font = new Font("Arial",25,FontStyle.Bold);
+			lblBrojacPoena.Font = new Font("Arial",Height/30,FontStyle.Bold);
 			Controls.Add(lblBrojacPoena);
 
 			//namestanje labele za kraj igre
@@ -67,7 +67,7 @@ namespace Flappy_bird
 			//namestanje pbx
 			pbxZemlja.BackgroundImage = Properties.Resources.ground;
 			pbxZemlja.BackgroundImageLayout = ImageLayout.Tile;
-			pbxZemlja.SetBounds(0, 700, Width * 2, 100);
+			pbxZemlja.SetBounds(0, Height-Height/8, Width * 2, Height/8);
 			Controls.Add(pbxZemlja);
 
 			PocetnaPozicija();
@@ -80,10 +80,11 @@ namespace Flappy_bird
 			ideGore = 0;
 			brzinaKaDole = 0;
 			gameOver = false;
-			score = 0;
+			score = 98;
 
 			lblBrojacPoena.Text = "0";
-			lblBrojacPoena.SetBounds(Width/2-20, Height/10, 50, 40);
+			lblBrojacPoena.SetBounds(Width/2-20, Height/10, Height/16, Height/14);
+			lblBrojacPoena.TextAlign = ContentAlignment.MiddleCenter;
 
 			var x = Width;
 			var sirinaCevi = Width / 8;
@@ -122,15 +123,15 @@ namespace Flappy_bird
 				}
 				else if (pbxPtica.Left > Cevi[indexCeviIspredPtice].GornjaCev.Right)
 				{
-					int prethodnaSirinaBrojaca = 23 *(score.ToString().Length - 1);
+					int prethodnaSirinaBrojaca = 25 *(score.ToString().Length - 1);
 					indexCeviIspredPtice++;
 					score++;
 					if (score > highScore) highScore = score;
 					lblBrojacPoena.Text = score.ToString();
-					int sirinaBrojaca =  23 * (lblBrojacPoena.Text.Length-1);
+					int sirinaBrojaca =  25 * (lblBrojacPoena.Text.Length-1);
 					if (prethodnaSirinaBrojaca < sirinaBrojaca)
 					{
-						lblBrojacPoena.SetBounds(Width / 2 - sirinaBrojaca/2, Height / 10, 50 + sirinaBrojaca, 40);
+						lblBrojacPoena.SetBounds(Width / 2 - sirinaBrojaca/2, Height / 10, Height/24 + sirinaBrojaca, Height/14);
 					}
 					if (indexCeviIspredPtice == Cevi.Count) indexCeviIspredPtice = 0;
 				}
@@ -148,7 +149,6 @@ namespace Flappy_bird
             {
 				lblKrajIgre.Visible = true;
 				lblMaxPoena.Text = $"Rekord: {highScore}";
-				lblMaxPoena.Width = 350 + lblBrojacPoena.Width;
 				lblMaxPoena.Visible = true;
                 if (pbxPtica.Top <= ClientSize.Height)
                 {
