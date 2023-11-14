@@ -61,12 +61,12 @@
             this.ClientSize = new System.Drawing.Size(825, 416);
             this.Controls.Add(this.pbxPtica);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pbxPtica)).EndInit();
             this.ResumeLayout(false);
